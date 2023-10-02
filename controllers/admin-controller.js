@@ -40,6 +40,16 @@ const adminController = { // 修改這裡
         if (!restaurant) throw new Error("Restaurant didn't exist!") //  如果找不到，回傳錯誤訊息，後面不執行
         res.render('admin/restaurant', { restaurant })
       })
+  }, // 補逗點
+  editRestaurant: (req, res, next) => { // 新增這段
+    Restaurant.findByPk(req.params.id, {
+      raw: true
+    })
+      .then(restaurant => {
+        if (!restaurant) throw new Error("Restaurant didn't exist!")
+        res.render('admin/edit-restaurant', { restaurant })
+      })
+      .catch(err => next(err))
   }
 }
 

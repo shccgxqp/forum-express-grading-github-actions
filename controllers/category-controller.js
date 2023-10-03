@@ -20,7 +20,7 @@ const categoryController = {
     return Category.create({ name })
       .then(() => res.redirect('/admin/categories'))
       .catch(err => next(err))
-  }, // 加逗號，新增以下
+  },
   putCategory: (req, res, next) => {
     const { name } = req.body
     if (!name) throw new Error('Category name is required!')
@@ -28,6 +28,15 @@ const categoryController = {
       .then(category => {
         if (!category) throw new Error("Category doesn't exist!")
         return category.update({ name })
+      })
+      .then(() => res.redirect('/admin/categories'))
+      .catch(err => next(err))
+  },
+  deleteCategory: (req, res, next) => {
+    return Category.findByPk(req.params.id)
+      .then(category => {
+        if (!category) throw new Error("Category didn't exist!") // 反查，確認要刪除的類別存在，再進行下面刪除動作
+        return category.destroy()
       })
       .then(() => res.redirect('/admin/categories'))
       .catch(err => next(err))

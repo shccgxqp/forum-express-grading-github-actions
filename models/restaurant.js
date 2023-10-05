@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       Restaurant.belongsTo(models.Category, { foreignKey: 'categoryId' })
       Restaurant.hasMany(models.Comment, { foreignKey: 'restaurantId' })
     }
-  };
+  }
   Restaurant.init({
     name: DataTypes.STRING,
     tel: DataTypes.STRING,
@@ -21,11 +21,11 @@ module.exports = (sequelize, DataTypes) => {
     openingHours: DataTypes.STRING,
     description: DataTypes.TEXT,
     image: DataTypes.STRING,
-    viewCount: DataTypes.INTEGER
+    viewCounts: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Restaurant',
-    tableName: 'Restaurants',
+    tableName: 'Restaurants', // 新增這裡
     underscored: true
   })
   return Restaurant

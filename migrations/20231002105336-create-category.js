@@ -1,12 +1,27 @@
 'use strict'
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn('Restaurants', 'image', {
-      type: Sequelize.STRING
+    await queryInterface.createTable('Categories', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      name: {
+        type: Sequelize.STRING
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     })
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.removeColumn('Restaurants', 'image')
+    await queryInterface.dropTable('Categories')
   }
 }

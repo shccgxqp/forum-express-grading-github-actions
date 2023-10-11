@@ -33,6 +33,7 @@ router.delete('/favorite/:restaurantId', authenticated, userController.removeFav
 router.delete('/like/:restaurantId', authenticated, userController.removeLike)
 router.post('/like/:restaurantId', authenticated, userController.addLike)
 
+router.get('/users/top', authenticated, userController.getTopUsers)
 router.get('/users/:id/edit', authenticated, userController.editUser)
 router.get('/users/:id', authenticated, userController.getUser)
 router.put('/users/:id', authenticated, upload.single('image'), userController.putUser)

@@ -8,6 +8,7 @@ const passport = require('./config/passport') //  引入 passport
 const handlebarsHelpers = require('./helpers/handlebars-helpers')
 const { pages, apis } = require('./routes')
 const { getUser } = require('./helpers/auth-helpers')
+require('dotenv').config()
 
 const app = express()
 const port = process.env.PORT || 3000

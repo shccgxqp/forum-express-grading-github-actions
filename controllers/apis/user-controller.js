@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken')
-const bcrypt = require('bcryptjs')
 
-const db = require('../../models')
-const { User } = db
+const userServices = require('../../services/user-services')
 
 const userController = {
   signIn: (req, res, next) => {
@@ -23,41 +21,34 @@ const userController = {
     }
   },
   signUp: (req, res, next) => {
-    try {
-      if (req.body.password !== req.body.passwordCheck) throw new Error('Passwords do not match!')
-      User.findOne({ where: { email: req.body.email } })
-        .then(user => {
-          if (user) {
-            res.status(400).json({
-              status: 'error',
-              message: 'Email already exists!'
-            })
-          } else {
-            return bcrypt.hash(req.body.password, 10)
-              .then(hash => User.create({
-                name: req.body.name,
-                email: req.body.email,
-                password: hash
-              }))
-              .then(user => {
-                const userData = user.toJSON()
-                delete userData.password
-
-                const token = jwt.sign(userData, process.env.JWT_SECRET, { expiresIn: '30d' })
-
-                res.json({
-                  status: 'success',
-                  data: {
-                    token,
-                    user: userData
-                  }
-                })
-              })
-          }
-        })
-    } catch (err) {
-      next(err)
-    }
+    userServices.signUp(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  getUser: (req, res, next) => {
+    userServices.getUser(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  putUser: (req, res, next) => {
+    userServices.putUser(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  addFavorite: (req, res, next) => {
+    userServices.addFavorite(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  removeFavorite: (req, res, next) => {
+    userServices.removeFavorite(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  addLike: (req, res, next) => {
+    userServices.addLike(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  removeLike: (req, res, next) => {
+    userServices.removeLike(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  getTopUsers: (req, res, next) => {
+    userServices.getTopUsers(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  addFollowing: (req, res, next) => {
+    userServices.addFollowing(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
+  },
+  removeFollowing: (req, res, next) => {
+    userServices.removeFollowing(req, (err, data) => err ? next(err) : res.json({ status: 'success', data }))
   }
 }
 module.exports = userController

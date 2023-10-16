@@ -1,45 +1,28 @@
-const { Category } = require('../../models')
+const categoryServices = require('../../services/category-services')
 const categoryController = {
   getCategories: (req, res, next) => {
-    // 修改以下
-    return Promise.all([
-      Category.findAll({ raw: true }),
-      req.params.id ? Category.findByPk(req.params.id, { raw: true }) : null
-    ])
-      .then(([categories, category]) => {
-        res.render('admin/categories', {
-          categories,
-          category
-        })
-      })
-      .catch(err => next(err))
+    categoryServices.getCategories(req, (err, data) => err ? next(err) : res.render('admin/categories', data))
   },
   postCategory: (req, res, next) => {
-    const { name } = req.body
-    if (!name) throw new Error('Category name is required!')
-    return Category.create({ name })
-      .then(() => res.redirect('/admin/categories'))
-      .catch(err => next(err))
+    categoryServices.postCategory(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', '分類新增成功')
+      return res.redirect('/admin/categories')
+    })
   },
-  putCategory: (req, res, next) => {
-    const { name } = req.body
-    if (!name) throw new Error('Category name is required!')
-    return Category.findByPk(req.params.id)
-      .then(category => {
-        if (!category) throw new Error("Category doesn't exist!")
-        return category.update({ name })
-      })
-      .then(() => res.redirect('/admin/categories'))
-      .catch(err => next(err))
+  putCategories: (req, res, next) => {
+    categoryServices.putCategories(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', '分類編輯成功')
+      return res.redirect('/admin/categories')
+    })
   },
   deleteCategory: (req, res, next) => {
-    return Category.findByPk(req.params.id)
-      .then(category => {
-        if (!category) throw new Error("Category didn't exist!") // 反查，確認要刪除的類別存在，再進行下面刪除動作
-        return category.destroy()
-      })
-      .then(() => res.redirect('/admin/categories'))
-      .catch(err => next(err))
+    categoryServices.deleteCategory(req, (err, data) => {
+      if (err) return next(err)
+      req.flash('success_messages', '分類刪除成功')
+      return res.redirect('/admin/categories')
+    })
   }
 }
 module.exports = categoryController
